@@ -48,12 +48,16 @@ export class PantallaCrearTicketComponent {
         
         // Retraso para UX antes de redirigir
         setTimeout(() => {
-          this.router.navigate(['/ver-tickets']);
-        }, 1500);
+          this.titulo = "";
+          this.descripcion = "";
+          this.mensaje = "";
+      }, 1000);
       },
       error: (error) => {
         console.error("❌ Error al crear el ticket:", error);
         console.log("🔍 Código de error recibido:", error.status);
+        console.log("📌 Respuesta completa:", error);
+
         if (error.status === 400) {
           this.mensaje = "⚠️ Faltan datos obligatorios.";
         } else if (error.status === 401) {

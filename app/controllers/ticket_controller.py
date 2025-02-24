@@ -4,11 +4,19 @@ from app.models.ticket_model import create_ticket, get_tickets, update_ticket_st
 
 class TicketController:
     def create_ticket(self, data):
+        
+        print(f"📌 Sesión antes de procesar ticket: {dict(session)}")
         titulo = data.get('titulo')
         descripcion = data.get('descripcion')
         username = data.get('username')
         sucursal_id = session.get('sucursal_id')
+        
+        print("📌 Sesión en Flask antes de responder:", {dict(session)})
+        
         ticket = create_ticket(titulo, descripcion, username, sucursal_id)
+        
+        print("📌 Sesión en Flask después:", {dict(session)})
+        
         return jsonify({
             'mensaje': 'Ticket creado exitosamente',
             'id': ticket['id'],
@@ -16,6 +24,8 @@ class TicketController:
             'fecha_creacion': ticket['fecha_creacion']
         }), 201
 
+        
+        
     def get_tickets(self, estado):
         sucursal_id = session.get('sucursal_id')
         limit = request.args.get('limit', default=None, type=int)

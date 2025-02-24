@@ -1,5 +1,5 @@
 # app/routes/ticket_routes.py
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, session
 from flask_cors import CORS
 from app.models.database import get_db_connection
 from app.models.ticket_model import Ticket
@@ -56,12 +56,18 @@ def create_ticket():
     try:
         # 🔥 Verificar manualmente el token antes de @jwt_required()
         verify_jwt_in_request()
+        
+        auth_header = request.headers.get('Authorization')
+        print(f"📌 Token recibido en Flask: {auth_header}")
 
         usuario_actual = get_jwt_identity()  # 🔹 Obtener usuario autenticado
         print(f"📌 Usuario autenticado en Flask: {usuario_actual}")  
 
         if usuario_actual is None:
+            print("⚠️ No autorizado, sesión posiblemente expirada")
             return jsonify({"mensaje": "No autorizado"}), 401
+        
+        print(f"🔍 Verificando sesión en Flask: {session.get('user_id')}")
 
         data = request.get_json()
         titulo = data.get("titulo")
@@ -133,8 +139,12 @@ def options_response():
     return '', 204  # Responder sin contenido, pero permitiendo la solicitud
 
 
-@ticket_bp.route('/test-jwt', methods=['GET'])
+@ticket_bp.route('/test-session', methods=['GET'])
 @jwt_required()
-def test_jwt():
+def test_session():
     usuario_actual = get_jwt_identity()
-    return jsonify({"mensaje": f"Autenticado como {usuario_actual}"}), 200
+    print(f"📌 Verificando sesión: {dict(session)}")
+    return jsonify({
+        "mensaje": "JWT sigue siendo válido",
+        "usuario": usuario_actual
+    }), 200

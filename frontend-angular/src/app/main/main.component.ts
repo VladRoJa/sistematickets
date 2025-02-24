@@ -16,12 +16,9 @@ export class MainComponent {
 
   constructor(private router: Router) {}
 
-  cerrarSesion() {
-    console.warn("🚨 Se ejecutó cerrarSesion() automáticamente.");
-    debugger;
-    console.log("🚨 Se ejecutó cerrarSesion() automáticamente.");
-    console.trace(); // 👀 Esto imprimirá en consola quién llamó a cerrarSesion()
-    console.log("Sesión cerrada");
+  cerrarSesion(origen: string = "manual") {
+    console.warn(`🚨 Se ejecutó cerrarSesion() automáticamente desde: ${origen}`);
+    console.trace(); // Ver qué función lo llamó
     localStorage.removeItem('token'); // ✅ Eliminar el token
     this.router.navigate(['/login']); // ✅ Redirigir a login
   }

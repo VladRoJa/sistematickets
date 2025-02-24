@@ -1,6 +1,6 @@
 #app/routes/auth_routes.py
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token
 from app.models.user_model import User
@@ -8,6 +8,11 @@ from datetime import timedelta
 
 auth_bp = Blueprint('auth', __name__)
 CORS(auth_bp, resources={r"/*": {"origins": "http://localhost:4200"}}, supports_credentials=True)
+
+@auth_bp.route('/session-info', methods=['GET'])
+def session_info():
+    return jsonify(dict(session)), 200
+
 
 @auth_bp.route('/login', methods=['POST', 'OPTIONS'])
 def login():
